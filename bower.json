@@ -1,0 +1,20 @@
+{
+  "name": "jade-sass-gulp",
+  "description": "Starting webflow",
+  "main": "index.js",
+  "authors": [
+    "TheUnchainedPug"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    
+  }
+}

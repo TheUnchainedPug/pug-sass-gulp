@@ -1,0 +1,35 @@
+{
+  "name": "jade-sass-gulp",
+  "version": "1.0.0",
+  "description": "Starting webflow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheUnchainedPug/jade-sass-gulp.git"
+  },
+  "author": "TheUnchainedPug",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheUnchainedPug/jade-sass-gulp/issues"
+  },
+  "homepage": "https://github.com/TheUnchainedPug/jade-sass-gulp#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.5",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^2.0.0",
+    "gulp-if": "^2.0.2",
+    "gulp-imagemin": "^3.1.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-pug": "^3.2.0",
+    "gulp-sass": "^3.0.0",
+    "gulp-sourcemaps": "^2.3.1",
+    "gulp-uglify": "^2.0.0",
+    "gulp-useref": "^3.1.2"
+  }
+}
