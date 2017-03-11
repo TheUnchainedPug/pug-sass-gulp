@@ -1,3 +1,2 @@
-dist/components
+dist/vendors
 node_modules
-.bowerrc

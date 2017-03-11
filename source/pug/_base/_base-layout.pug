@@ -1,0 +1,14 @@
+block config
+	- var doctype = 'html'
+
+doctype html
+html
+	block head
+		include _head
+
+	body
+		block content
+			h2 This is base
+
+		include _scripts
+		

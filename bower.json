@@ -15,8 +15,6 @@
     "tests"
   ],
   "dependencies": {
-    "susy": "^2.2.12",
-    "bourbon": "^4.2.7",
     "jquery": "^3.1.1"
   }
 }

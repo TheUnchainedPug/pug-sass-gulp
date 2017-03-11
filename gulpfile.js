@@ -1,110 +1,90 @@
 "use strict";
 
-var gulp = require("gulp"),
-		concat = require("gulp-concat"),
-		csso = require("gulp-csso"),
-		pug = require("gulp-pug"),
-		sass = require("gulp-sass"),
-		uglify = require("gulp-uglify"),
-		rename = require("gulp-rename"),
-		autoprefixer = require("gulp-autoprefixer"),
-		sourcemaps = require("gulp-sourcemaps"),
-		imagemin = require("gulp-imagemin"),
-		notify = require("gulp-notify"),
-		useref = require("gulp-useref"),
-		gulpIf = require("gulp-if"),
-		newer = require("gulp-newer"),
-		browserSync = require("browser-sync").create();
+const gulp = require("gulp");
+const sass = require("gulp-sass");
+const plumber = require("gulp-plumber");
+const csso = require("gulp-csso");
+const rename = require("gulp-rename");
+const uglify = require("gulp-uglify");
+const autoprefixer = require("gulp-autoprefixer");
+const sourcemaps = require("gulp-sourcemaps");
+const notify = require("gulp-notify");
+const browserSync = require("browser-sync").create();
+const pug = require("gulp-pug");
+const useref = require("gulp-useref");
+const gulpIf = require("gulp-if");
+const del = require("del");
+const newer = require("gulp-newer");
+const debug = require("gulp-debug");
+const bs = require("browser-sync").create();
 
-var tasks = {
-	/**
-	 * Serving localhost
-	 */
-	
-	serving: function() {
-		browserSync.init({
-			server: {
-				baseDir: "app/"	
+
+gulp.task("clean", function(){
+	return(del('build'));
+});
+
+gulp.task("compile:styles", function() {
+	return gulp.src("source/sass/application.sass")
+		.pipe(plumber())
+		.pipe(sass()).on("error", notify.onError(function(err){
+			return {
+				title: "Styles",
+				message: err.message
 			}
-		});
-		gulp.watch('app/**/*.*').on('change', browserSync.reload)
-	},
+		}))
+		.pipe(autoprefixer())	
+		.pipe(csso())
+		.pipe(rename({
+			suffix: ".min"
+		}))
+		.pipe(notify())
+		.pipe(gulp.dest("build/style"))
+});
 
-	/**
-	 * Compile styles etc.
-	 */
-	
-	optimizingCss: function() {
-		return gulp.src('dist/sass/**/*.sass')
-			.pipe(sass().on('error', sass.logError))
-			.pipe(autoprefixer())
-			.pipe(csso())
-			.pipe(rename({suffix: ".min"}))
-			.pipe(notify())
-			.pipe(gulp.dest('app/style/'))
-			.pipe(browserSync.stream());
-	},
+gulp.task("compile:views", function() {
+	return gulp.src("source/pug/index.pug")
+		.pipe(plumber())
+		.pipe(pug({
+			pretty: true
+		}))
+		.on("error", notify.onError(function(err){
+			return {
+				title: "Views",
+				message: "The error is" + err.message
+			}
+		}))
+		.pipe(useref())
+		.pipe(gulpIf("*.js", uglify()))
+		.pipe(notify())
+		.pipe(gulp.dest("build/"))
+});
 
-	/**
-	 * Compile views(pug.js).
-	 */
-	
-	views: function() {
-		return gulp.src('dist/pug/index.pug')
-			.pipe(pug({
-				pretty: true
-			}))
-			.pipe(useref())
-			.pipe(gulpIf('*.js', uglify()))
-			.pipe(notify())
-			.pipe(gulp.dest('app/'))
-			.pipe(browserSync.stream());
-	},
+gulp.task("assets", function() {
+	return gulp.src("source/assets/**", {since: gulp.lastRun('assets')})
+		.pipe(newer("build"))
+		.pipe(debug({title: "assets"}))
+		.pipe(gulp.dest("build/"))
+});
 
-	/**
-	 * Optimizing images
-	 */
+gulp.task("build", gulp.series(
+	"clean",
+	gulp.parallel("compile:styles", "compile:views", "assets"))
+);
 
-	optimizeImages: function() {
-		return gulp.src('dist/images/**/*.*')
-			.pipe(newer("app/img/"))
-			.pipe(imagemin())
-			.pipe(gulp.dest('app/img/'))
-	},
+gulp.task("watch", function() {
+	gulp.watch("source/sass/**/*.*", gulp.series("compile:styles"))
+	gulp.watch("source/assets/**/*.*", gulp.series("assets"))
+	gulp.watch("source/pug/**/*.*", gulp.series("compile:views"))
+});
 
-	/**
-	 * Minifying scripts
-	 */
-	
-	uglifyingJs: function() {
-		return gulp.src("dist/js/*.js")
-			.pipe(uglify())
-			.pipe(rename({suffix: ".min"}))
-			.pipe(gulp.dest("app/js"));
-	},
+gulp.task("serve", function() {
+	bs.init({
+		server: "build"
+	})
 
-	/**
-	 * Watcher
-	 */
-	
-	watching: function() {
-		gulp.watch("dist/sass/**/*.sass", ["styles"]);
-		gulp.watch("dist/pug/**/*.pug", ["views"]);
-		gulp.watch("dist/images/**/*.*", ["images"]);
-		gulp.watch("dist/js/**/*.js", ["scripts"])
-	}
-};
+	bs.watch("build/**/*.*").on("change", bs.reload)
+});
 
-
-/**
- * TASKS ARE BEING CALLED
- */
-gulp.task('serve', tasks.serving());
-gulp.task('styles', tasks.optimizingCss);
-gulp.task('views', tasks.views);
-gulp.task('images', tasks.optimizeImages);
-gulp.task("scripts", tasks.uglifyingJs);
-gulp.task('watch', tasks.watching);
-
-/*Default task*/
-gulp.task("default", ["serve", "watch"]);
+gulp.task("dev",
+	gulp.series("build", gulp.parallel("watch", "serve"))
+);
