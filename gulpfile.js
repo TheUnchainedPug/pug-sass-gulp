@@ -6,6 +6,7 @@ const plumber = require("gulp-plumber");
 const csso = require("gulp-csso");
 const rename = require("gulp-rename");
 const uglify = require("gulp-uglify");
+const imagemin = require("gulp-imagemin");
 const autoprefixer = require("gulp-autoprefixer");
 const sourcemaps = require("gulp-sourcemaps");
 const notify = require("gulp-notify");
@@ -59,10 +60,10 @@ gulp.task("compile:views", function() {
 		.pipe(gulp.dest("build/"))
 });
 
+
 gulp.task("assets", function() {
 	return gulp.src("source/assets/**", {since: gulp.lastRun('assets')})
 		.pipe(newer("build"))
-		.pipe(debug({title: "assets"}))
 		.pipe(gulp.dest("build/"))
 });
 
