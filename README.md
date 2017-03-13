@@ -1,1 +1,1 @@
-![pug-sass-gulp](https://cloud.githubusercontent.com/assets/16023592/23862098/efeea990-082d-11e7-8ea3-66dec5bd9f43.png)
+![pug](https://cloud.githubusercontent.com/assets/16023592/23862575/30b82cb6-082f-11e7-854d-8eb1922bf0e4.jpg)
