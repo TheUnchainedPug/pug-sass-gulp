@@ -1,7 +1,8 @@
-head
+block head_title
 	title #{title}
-	meta(charset='UTF-8')
-	meta(name='viewport' content='width=device-width, initial-scale=1.0')
+meta(charset='UTF-8')
+meta(name='viewport' content='width=device-width, initial-scale=1.0')
++link("favicon.ico", "icon")
 
-	// Styles
-	link(href='style/application.min.css' rel='stylesheet')
+block head_styles
+	+link("styles/application.min.css", "stylesheet")

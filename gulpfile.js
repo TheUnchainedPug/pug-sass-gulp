@@ -43,7 +43,7 @@ gulp.task("compile:styles", function() {
 });
 
 gulp.task("compile:views", function() {
-	return gulp.src("source/pug/index.pug")
+	return gulp.src("source/pug/*.pug")
 		.pipe(plumber())
 		.pipe(pug({
 			pretty: true
@@ -60,22 +60,32 @@ gulp.task("compile:views", function() {
 		.pipe(gulp.dest("build/"))
 });
 
+gulp.task("images", function() {
+	return gulp.src("source/img/**/*.{png,jpg,svg}")
+		.pipe(imagemin())
+		.pipe(gulp.dest("build/img"))
+});
 
-gulp.task("assets", function() {
-	return gulp.src("source/assets/**", {since: gulp.lastRun('assets')})
-		.pipe(newer("build"))
+gulp.task("favicon", function() {
+	return gulp.src("source/favicon.ico")
 		.pipe(gulp.dest("build/"))
+});
+
+gulp.task("fonts", function() {
+	return gulp.src("source/fonts/**", {since: gulp.lastRun("fonts")})
+		.pipe(gulp.dest("build/fonts"))
 });
 
 gulp.task("build", gulp.series(
 	"clean",
-	gulp.parallel("compile:styles", "compile:views", "assets"))
+	gulp.parallel("compile:styles", "compile:views", "favicon", "images", "fonts"))
 );
 
 gulp.task("watch", function() {
-	gulp.watch("source/sass/**/*.*", gulp.series("compile:styles"))
-	gulp.watch("source/assets/**/*.*", gulp.series("assets"))
-	gulp.watch("source/pug/**/*.*", gulp.series("compile:views"))
+	gulp.watch("source/sass/**/*.*", gulp.series("compile:styles"));
+	gulp.watch("source/img/**/*.*", gulp.series("images"));
+	gulp.watch("source/fonts/**/*.*", gulp.series("fonts"));
+	gulp.watch("source/pug/**/*.*", gulp.series("compile:views"));
 });
 
 gulp.task("serve", function() {

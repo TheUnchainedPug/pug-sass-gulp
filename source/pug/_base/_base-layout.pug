@@ -1,14 +1,25 @@
-block config
-	- var doctype = 'html'
+//- Configuration
+include _config
+include _mixins
+//- End Configuration
 
+//- HTML
 doctype html
 html
-	block head
+	head
+		//- Head includes
 		include _head
 
 	body
-		block content
-			h2 This is base
+		// Header
+		include ../_layouts/_header
+		// End Header
 
+
+		// Footer
+		include ../_layouts/_footer
+		// End Footer
+
+		// Scripts
 		include _scripts
 		
