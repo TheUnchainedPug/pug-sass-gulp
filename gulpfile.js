@@ -16,6 +16,7 @@ const useref = require("gulp-useref");
 const gulpIf = require("gulp-if");
 const del = require("del");
 const newer = require("gulp-newer");
+const cached = require("gulp-cached");
 const debug = require("gulp-debug");
 const bs = require("browser-sync").create();
 
@@ -33,7 +34,12 @@ gulp.task("compile:styles", function() {
 				message: err.message
 			}
 		}))
-		.pipe(autoprefixer())	
+		.pipe(debug({
+			title: "Styles are compiled: "
+		}))
+		.pipe(autoprefixer({
+            browsers: ['last 4 versions'],
+        }))	
 		.pipe(csso())
 		.pipe(rename({
 			suffix: ".min"
@@ -60,31 +66,41 @@ gulp.task("compile:views", function() {
 		.pipe(gulp.dest("build/"))
 });
 
-gulp.task("images", function() {
-	return gulp.src("source/img/**/*.{png,jpg,svg}")
-		.pipe(imagemin())
+gulp.task("compress:images", function() {
+	return gulp.src("source/img/**/*.*")
+		.pipe(newer("build/img"))
+		.pipe(imagemin({
+			progressive: true
+		}))
+		.pipe(debug({
+			title: "Images are compressed: "
+		}))
 		.pipe(gulp.dest("build/img"))
 });
 
-gulp.task("favicon", function() {
+gulp.task("copy:favicon", function() {
 	return gulp.src("source/favicon.ico")
 		.pipe(gulp.dest("build/"))
 });
 
-gulp.task("fonts", function() {
-	return gulp.src("source/fonts/**", {since: gulp.lastRun("fonts")})
+gulp.task("copy:fonts", function() {
+	return gulp.src("source/fonts/**")
+		.pipe(newer("build/fonts"))
+		.pipe(debug({
+			title: "Fonts are copied: "
+		}))
 		.pipe(gulp.dest("build/fonts"))
 });
 
 gulp.task("build", gulp.series(
 	"clean",
-	gulp.parallel("compile:styles", "compile:views", "favicon", "images", "fonts"))
+	gulp.parallel("compile:styles", "compile:views", "copy:favicon", "compress:images", "copy:fonts"))
 );
 
 gulp.task("watch", function() {
 	gulp.watch("source/sass/**/*.*", gulp.series("compile:styles"));
-	gulp.watch("source/img/**/*.*", gulp.series("images"));
-	gulp.watch("source/fonts/**/*.*", gulp.series("fonts"));
+	gulp.watch("source/img/**/*.*", gulp.series("compress:images"));
+	gulp.watch("source/fonts/**/*.*", gulp.series("copy:fonts"));
 	gulp.watch("source/pug/**/*.*", gulp.series("compile:views"));
 });
 
