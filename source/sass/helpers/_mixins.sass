@@ -1,0 +1,36 @@
+////////////////////////////
+//		MEDIA QUERIES
+////////////////////////////
+/* Large Devices, Wide Screens */
+@mixin large
+	@media only screen and (max-width: $large) 
+		@content
+
+
+
+/* Medium Devices, Desktops */
+@mixin medium
+	@media only screen and (max-width: $medium) 
+		@content
+
+
+
+/* Small Devices, Tablets */
+@mixin small
+	@media only screen and (max-width: $small) 
+		@content
+
+
+
+/* Extra Small Devices, Phones */ 
+@mixin eSmall
+	@media only screen and (max-width: $extraSmall) 
+		@content
+
+
+
+/* Custom, iPhone Retina */ 
+@mixin phone
+	@media only screen and (max-width: $smallest) 
+		@content
+	

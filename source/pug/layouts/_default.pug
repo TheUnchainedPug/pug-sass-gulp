@@ -1,0 +1,34 @@
+//- Configuration
+include ../helpers/_config
+include ../helpers/_mixins
+//- End Configuration
+
+//- HTML
+doctype html
+
+//- Global Variables
+block vars
+	//- Here goes the data
+	- 
+		var data = {
+			title: 'Default Title',
+			bodyClass: 'DEFAULT'.toLowerCase()
+		}
+html
+	head
+		//- Head includes
+		include ../base/_head
+
+	body(class='' + data.bodyClass)
+		block content
+			// Header
+			include ../layouts/_header
+			// End Header
+
+			// Footer
+			include ../layouts/_footer
+			// End Footer
+
+		// Scripts
+		include ../base/_scripts
+		
