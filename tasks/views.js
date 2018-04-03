@@ -10,7 +10,7 @@ gulp.task('compile:views',function() {
 			gulp.src(config.paths.src.views)
 				.pipe($.if(global.watch, emitty.filter(global.emittyChangedFile)))
 				.pipe($.pug({ pretty: true }))
-				.pipe(gulp.dest(config.paths.dest.views))
+				.pipe(gulp.dest(config.paths.dist.views))
 				.on('end', resolve)
 				.on('error', reject);
 		});
